@@ -7,6 +7,29 @@
     android:background="@color/colorPrimary"
     tools:context=".SplashActivity">
 
+    <ImageView
+        android:id="@+id/imgSplash"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/group_1">
 
+    </ImageView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chat W6"
+        android:textColor="@color/colorAccent"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_below="@id/imgSplash"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp">
+
+    </TextView>
+
+
+    
 
 </RelativeLayout>
