@@ -1,16 +1,19 @@
 package com.example.chatappw6_doan
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.chatappw6_doan.databinding.FragmentGetNumberBinding
+import com.example.chatappw6_doan.databinding.FragmentGetNumberBinding.inflate
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
@@ -30,7 +33,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class GetNumber : Fragment() {
 
-    var binding: FragmentGetNumberBinding? = null
+    private var binding: FragmentGetNumberBinding? = null
     private var number: String? = null
 
     // TODO: Rename and change types of parameters
@@ -48,23 +51,19 @@ class GetNumber : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentGetNumberBinding.inflate(inflater, container, false)
-        var view: View = binding!!.root
+    ): View {
+        binding = inflate(inflater, container, false)
+        val view: View = binding!!.root
         initViews()
-        binding!!.btnGenerateOTP.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                checkNumber()
-                if (checkNumber()) {
-                    var phonenumber =
-                        binding!!.countryCodePicker.selectedCountryCodeWithPlus + number
+        binding!!.btnGenerateOTP.setOnClickListener {
+            checkNumber()
+            if (checkNumber()) {
+                val phonenumber =
+                    binding!!.countryCodePicker.selectedCountryCodeWithPlus + number
 
-                    sendOTP(phonenumber)
-                }
+                sendOTP(phonenumber)
             }
-
         }
-        )
 
 
         return view
@@ -81,15 +80,15 @@ class GetNumber : Fragment() {
 
     private fun checkNumber(): Boolean {
         number = binding!!.edtNumber.text.toString()
-        if (number!!.isEmpty()) {
+        return if (number!!.isEmpty()) {
             binding!!.edtNumber.error = "Filed is required"
-            return false
+            false
         } else if (number!!.length < 10) {
             binding!!.edtNumber.error = "Invalid number"
-            return false
+            false
         } else {
             binding!!.edtNumber.error = null
-            return true
+            true
         }
 
     }
@@ -100,34 +99,38 @@ class GetNumber : Fragment() {
             .setPhoneNumber(phoneNumber) // Phone number to verify
             .setTimeout(60, TimeUnit.SECONDS) // Timeout and unit
             .setActivity(requireActivity()) // Activity (for callback binding)
+            .setCallbacks(verifyPhoneNumber)
             // OnVerificationStateChangedCallbacks
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-    var verifyPhoneNumber: OnVerificationStateChangedCallbacks =
+     var verifyPhoneNumber: OnVerificationStateChangedCallbacks =
         object : OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
 
             }
 
             override fun onVerificationFailed(e: FirebaseException) {
-                if (e is FirebaseAuthInvalidCredentialsException) Toast.makeText(
+                if (e is FirebaseAuthInvalidCredentialsException)
+                    Toast.makeText(
                     context,
                     e.message,
                     Toast.LENGTH_LONG
-                ).show() else if (e is FirebaseTooManyRequestsException) Toast.makeText(
-                    context, "The sms quota for the project has been exceeded", Toast.LENGTH_LONG
                 ).show()
+                else if (e is FirebaseTooManyRequestsException)
+                    Toast.makeText(context, "The sms quota for the project has been exceeded", Toast.LENGTH_LONG).show()
+
+
             }
 
             override fun onCodeSent(p0: String, p1: PhoneAuthProvider.ForceResendingToken) {
                 super.onCodeSent(p0, p1)
-                var fragment: Fragment = VerifyNumber()
-                var bundle = Bundle()
+                val fragment: Fragment = VerifyNumber()
+                val bundle = Bundle()
                 bundle.putString(AllConstants.VERIFICATION_CODE, p0)
                 fragment.arguments = bundle
-                parentFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
+                requireActivity().supportFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
             }
         }
 
@@ -148,6 +151,7 @@ class GetNumber : Fragment() {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
                 }
+
             }
     }
 

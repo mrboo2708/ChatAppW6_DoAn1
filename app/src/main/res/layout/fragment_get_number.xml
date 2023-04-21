@@ -77,14 +77,14 @@
                 android:backgroundTint="@color/colorAccent"
                 android:hint="Number"
                 android:inputType="phone"
-                android:maxLength="10"
+                android:maxLength="20"
                 android:textAlignment="center"
                 android:textColor="@color/colorAccent"
                 android:textColorHint="@color/colorAccent" />
 
         </LinearLayout>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnGenerateOTP"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

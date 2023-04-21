@@ -73,7 +73,7 @@
             app:lineWidth="2dp"
             app:viewType="rectangle" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnVerify"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

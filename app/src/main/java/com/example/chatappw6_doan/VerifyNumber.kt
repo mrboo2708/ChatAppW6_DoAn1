@@ -45,13 +45,13 @@ class VerifyNumber : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentVerifyNumberBinding.inflate(inflater, container, false)
-        var view: View = binding!!.root
+        val view: View = binding!!.root
 
         firebaseAuth = FirebaseAuth.getInstance()
-        var bundle = arguments
+        val bundle = arguments
         if (bundle != null) {
             OTP = bundle.getString(AllConstants.VERIFICATION_CODE)
 
@@ -87,8 +87,8 @@ class VerifyNumber : Fragment() {
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         firebaseAuth!!.signInWithCredential(credential).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                var fragment = UserData()
-                parentFragmentManager.beginTransaction().replace(R.id.container, fragment)
+                val fragment = UserData()
+                requireActivity().supportFragmentManager.beginTransaction().replace(R.id.container, fragment)
                     .commit()
             } else Toast.makeText(context, "" + task.exception, Toast.LENGTH_SHORT).show()
         }
