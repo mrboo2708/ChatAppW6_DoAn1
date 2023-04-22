@@ -1,5 +1,6 @@
 package com.example.chatappw6_doan;
 
+import android.Manifest;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +28,7 @@ public class fu {
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
-
+            
         }
     };
 }

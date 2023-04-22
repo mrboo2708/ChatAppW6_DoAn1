@@ -1,7 +1,6 @@
 package com.example.chatappw6_doan
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
@@ -105,7 +103,7 @@ class GetNumber : Fragment() {
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-     var verifyPhoneNumber: OnVerificationStateChangedCallbacks =
+     private var verifyPhoneNumber: OnVerificationStateChangedCallbacks =
         object : OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
 
