@@ -13,17 +13,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 public class fu {
     private FirebaseAuth firebaseAuth;
-
+    private ChipNavigationBar chipNavigationBar;
     public void main(){
 
     }
     PhoneAuthProvider.OnVerificationStateChangedCallbacks verifyPhoneNumber = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+            chipNavigationBar.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(int i) {
 
+                }
+            });
         }
 
         @Override

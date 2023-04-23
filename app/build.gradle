@@ -78,4 +78,7 @@ dependencies {
 
     //image crop
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+
+    //chip navigation bar
+    implementation 'com.github.ismaeldivita:chip-navigation-bar:1.4.0'
 }
