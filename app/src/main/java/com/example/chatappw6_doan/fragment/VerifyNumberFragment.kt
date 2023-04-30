@@ -1,12 +1,15 @@
-package com.example.chatappw6_doan
+package com.example.chatappw6_doan.fragment
 
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.chatappw6_doan.R
+import com.example.chatappw6_doan.constants.AllConstants
 import com.example.chatappw6_doan.databinding.FragmentVerifyNumberBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -20,10 +23,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [VerifyNumber.newInstance] factory method to
+ * Use the [VerifyNumberFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class VerifyNumber : Fragment() {
+class VerifyNumberFragment : Fragment() {
 
     private var binding: FragmentVerifyNumberBinding? = null
     private var OTP: String? = null
@@ -81,18 +84,22 @@ class VerifyNumber : Fragment() {
 
     private fun verifyPine(pin: String) {
         val credential = PhoneAuthProvider.getCredential(OTP!!, pin)
-        signInWithPhoneAuthCredential(credential)
+        if(isAdded){
+            signInWithPhoneAuthCredential(credential)
+        }
+
     }
 
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         firebaseAuth!!.signInWithCredential(credential).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                val fragment = UserData()
+                val fragment = UserDataFragment()
                 requireActivity().supportFragmentManager.beginTransaction().replace(R.id.container, fragment)
                     .commit()
             } else Toast.makeText(context, "" + task.exception, Toast.LENGTH_SHORT).show()
         }
     }
+
 
     companion object {
         /**
@@ -106,7 +113,7 @@ class VerifyNumber : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            VerifyNumber().apply {
+            VerifyNumberFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

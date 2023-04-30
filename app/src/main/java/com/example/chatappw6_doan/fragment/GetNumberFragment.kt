@@ -1,4 +1,4 @@
-package com.example.chatappw6_doan
+package com.example.chatappw6_doan.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.chatappw6_doan.R
+import com.example.chatappw6_doan.constants.AllConstants
 import com.example.chatappw6_doan.databinding.FragmentGetNumberBinding
-import com.example.chatappw6_doan.databinding.FragmentGetNumberBinding.inflate
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -26,10 +27,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [GetNumber.newInstance] factory method to
+ * Use the [GetNumberFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class GetNumber : Fragment() {
+class GetNumberFragment : Fragment() {
 
     private var binding: FragmentGetNumberBinding? = null
     private var number: String? = null
@@ -50,8 +51,8 @@ class GetNumber : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = inflate(inflater, container, false)
-        val view: View = binding!!.root
+        binding = FragmentGetNumberBinding.inflate(inflater, container, false)
+        var view: View = binding!!.root
         initViews()
         binding!!.btnGenerateOTP.setOnClickListener {
             checkNumber()
@@ -112,19 +113,23 @@ class GetNumber : Fragment() {
             override fun onVerificationFailed(e: FirebaseException) {
                 if (e is FirebaseAuthInvalidCredentialsException)
                     Toast.makeText(
-                    context,
-                    e.message,
-                    Toast.LENGTH_LONG
-                ).show()
+                        context,
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
                 else if (e is FirebaseTooManyRequestsException)
-                    Toast.makeText(context, "The sms quota for the project has been exceeded", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        "The sms quota for the project has been exceeded",
+                        Toast.LENGTH_LONG
+                    ).show()
 
 
             }
 
             override fun onCodeSent(p0: String, p1: PhoneAuthProvider.ForceResendingToken) {
                 super.onCodeSent(p0, p1)
-                val fragment: Fragment = VerifyNumber()
+                val fragment: Fragment = VerifyNumberFragment()
                 val bundle = Bundle()
                 bundle.putString(AllConstants.VERIFICATION_CODE, p0)
                 fragment.arguments = bundle
@@ -144,7 +149,7 @@ class GetNumber : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            GetNumber().apply {
+            GetNumberFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

@@ -1,4 +1,4 @@
-package com.example.chatappw6_doan
+package com.example.chatappw6_doan.fragment
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.example.chatappw6_doan.activity.DashBoard
 import com.example.chatappw6_doan.databinding.FragmentUserDataBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -31,10 +32,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [UserData.newInstance] factory method to
+ * Use the [UserDataFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class UserData : Fragment() {
+class UserDataFragment : Fragment() {
     private var binding: FragmentUserDataBinding? = null
     private var storePath: String? = null
     private var name: String? = null
@@ -65,20 +66,39 @@ class UserData : Fragment() {
         var view : View = binding!!.root
         firebaseAuth = FirebaseAuth.getInstance()
         database = Firebase.firestore
-        storageReference = FirebaseStorage.getInstance().getReference()
-        storePath = firebaseAuth!!.uid + "Media/Profile_Image/profile"
-        binding!!.imgPickImage.setOnClickListener{
-            if(isStoragePermissionOK()){
-                pickImage()
-            }
+        val docref = database!!.collection("Users").document(firebaseAuth!!.uid.toString())
+        docref.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val document = task.result
+                if(document != null) {
+                    if (document.exists()) {
+                        Log.d("TAG", "Document already exists.")
+                        val intent = Intent(context, DashBoard::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    } else {
+                        Log.d("TAG", "Document doesn't exist.")
+                        storageReference = FirebaseStorage.getInstance().getReference()
+                        storePath = firebaseAuth!!.uid + "Media/Profile_Image/profile"
+                        binding!!.imgPickImage.setOnClickListener{
+                            if(isStoragePermissionOK()){
+                                pickImage()
+                            }
 
+                        }
+
+                        binding!!.btnDataUser.setOnClickListener {
+                            if(checkName() && checkStatus() && checkImage()){
+                                uploadData()
+                            }
+                        }
+                    }
+                }
+            } else {
+                Log.d("TAG", "Error: ", task.exception)
+            }
         }
 
-        binding!!.btnDataUser.setOnClickListener {
-            if(checkName() && checkStatus() && checkImage()){
-                uploadData()
-            }
-        }
 
         return view
     }
@@ -93,16 +113,21 @@ class UserData : Fragment() {
                     var map =  hashMapOf<String, Any>(
                         "name" to name.toString(),
                         "status" to status.toString(),
-                        "image" to url
+                        "image" to url,
+                        "number" to "",
+                        "online" to "",
+                        "typing" to "",
+                        "token" to ""
                     )
 
-                    database!!.collection("Users").add(map)
+                    database!!.collection("Users").document(firebaseAuth!!.uid.toString()).set(map)
                         .addOnCompleteListener { task ->
                             Log.d("Check","update")
                             if (task.isSuccessful) {
                                 val intent = Intent(context, DashBoard::class.java)
                                 startActivity(intent)
                                 requireActivity().finish()
+                                Log.d("Check","sucess")
                             } else Toast.makeText(context, "Fail to upload", Toast.LENGTH_SHORT)
                                 .show()
                             Log.d("Check","not sucess")
@@ -217,7 +242,7 @@ class UserData : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            UserData().apply {
+            UserDataFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
