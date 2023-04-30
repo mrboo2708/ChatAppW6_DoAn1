@@ -1,8 +1,9 @@
-package com.example.chatappw6_doan
+package com.example.chatappw6_doan.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.chatappw6_doan.R
 import com.example.chatappw6_doan.fragment.ChatFragment
 import com.example.chatappw6_doan.fragment.ContactFragment
 import com.example.chatappw6_doan.fragment.ProfileFragment
@@ -39,7 +40,8 @@ class DashBoard : AppCompatActivity() {
 
                     }
                     if(fragment != null){
-                        supportFragmentManager.beginTransaction().replace(R.id.dashboardContainer,
+                        supportFragmentManager.beginTransaction().replace(
+                            R.id.dashboardContainer,
                             fragment!!
                         ).commit()
                     }

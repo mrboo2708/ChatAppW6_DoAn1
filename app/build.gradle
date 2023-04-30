@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'kotlin-kapt'
 
 }
 
@@ -26,17 +27,25 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of("17"))
+        }
     }
 
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 
     dataBinding{
         enabled = true
+    }
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
     }
 }
 
@@ -81,4 +90,23 @@ dependencies {
 
     //chip navigation bar
     implementation 'com.github.ismaeldivita:chip-navigation-bar:1.4.0'
+
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+
+    implementation 'com.airbnb.android:lottie:3.4.1'
+
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
+
+    implementation 'com.android.volley:volley:1.2.1'
+
+    implementation 'com.devlomi.record-view:record-view:2.0.1'
+
+    implementation  'com.fxn769:pix:1.5.3'
+
+    implementation 'com.iceteck.silicompressorr:silicompressor:2.2.3'
+
+    implementation 'com.github.JagarYousef:ChatVoicePlayer:1.0.7'
+
+    implementation 'com.sinch:sdk-sms:1.0.3'
 }

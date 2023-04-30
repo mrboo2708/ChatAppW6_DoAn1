@@ -1,10 +1,11 @@
-package com.example.chatappw6_doan
+package com.example.chatappw6_doan.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import com.example.chatappw6_doan.R
 import com.google.firebase.auth.FirebaseAuth
 
 class SplashActivity : AppCompatActivity() {

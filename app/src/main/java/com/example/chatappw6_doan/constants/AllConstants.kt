@@ -1,4 +1,4 @@
-package com.example.chatappw6_doan
+package com.example.chatappw6_doan.constants
 
 class AllConstants {
 
