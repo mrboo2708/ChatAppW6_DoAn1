@@ -84,9 +84,8 @@ class VerifyNumberFragment : Fragment() {
 
     private fun verifyPine(pin: String) {
         val credential = PhoneAuthProvider.getCredential(OTP!!, pin)
-        if(isAdded){
             signInWithPhoneAuthCredential(credential)
-        }
+
 
     }
 
@@ -94,8 +93,11 @@ class VerifyNumberFragment : Fragment() {
         firebaseAuth!!.signInWithCredential(credential).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val fragment = UserDataFragment()
-                requireActivity().supportFragmentManager.beginTransaction().replace(R.id.container, fragment)
-                    .commit()
+                if(isAdded){
+                    requireActivity().supportFragmentManager.beginTransaction().replace(R.id.container, fragment)
+                        .commit()
+                }
+
             } else Toast.makeText(context, "" + task.exception, Toast.LENGTH_SHORT).show()
         }
     }
