@@ -27,4 +27,21 @@ class Permissions {
         )
     }
 
+    fun isContactOk(context: Context?): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context!!,
+            Manifest.permission.READ_CONTACTS
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    fun requestContact(activity: Activity?) {
+        ActivityCompat.requestPermissions(
+            activity!!,
+            arrayOf<String>(
+                Manifest.permission.READ_CONTACTS,
+            ),
+            AllConstants.CONTACTS_REQUEST_CODE
+        )
+    }
+
 }
