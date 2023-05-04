@@ -1,24 +1,21 @@
 package com.example.chatappw6_doan.fragment
 
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chatappw6_doan.adapter.ContactAdapter
-import com.example.chatappw6_doan.constants.AllConstants
 import com.example.chatappw6_doan.databinding.FragmentContactBinding
 import com.example.chatappw6_doan.model.UserModel
 import com.example.chatappw6_doan.permissions.Permissions
 import com.example.chatappw6_doan.utils.Util
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.android.awaitFrame
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,11 +27,13 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ContactFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ContactFragment : Fragment() {
+class ContactFragment : Fragment(), SearchView.OnQueryTextListener,
+    androidx.appcompat.widget.SearchView.OnQueryTextListener {
     private var binding : FragmentContactBinding? = null
     private var database : FirebaseFirestore? = null
     private var permissions : Permissions? = null
     private var appContacts : ArrayList<UserModel>? = null
+    private var contactAdapter : ContactAdapter? = null
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -62,6 +61,8 @@ class ContactFragment : Fragment() {
         )
         binding!!.recyclerViewContact.setHasFixedSize(true)
         getUserContacts(util.getUid())
+        binding!!.contactSearchView.setOnQueryTextListener(this)
+
         return view
     }
 
@@ -79,52 +80,16 @@ class ContactFragment : Fragment() {
                     if(document.id != uid){
                         var userModel = UserModel()
                         userModel = document.toObject(UserModel::class.java)
+                        userModel.uID = document.id
                         appContacts!!.add(userModel)
                     }
                 }
             }
-            val adapter = ContactAdapter(requireContext(), appContacts!!)
-                    binding!!.recyclerViewContact.adapter = adapter
+            contactAdapter = ContactAdapter(requireContext(), appContacts!!)
+            binding!!.recyclerViewContact.adapter = contactAdapter
         }
 
     }
-
-//    private fun getAppContacts(userContacts: ArrayList<UserModel>?) {
-//        if(userContacts!!.size>0){
-//            database = Firebase.firestore
-//            val docRef = database!!.collection("Users").orderBy("number")
-//            docRef.addSnapshotListener{
-//                querySnapshot , firebaseException ->
-//                firebaseException?.let {
-//                    Toast.makeText(context,it.message.toString(),Toast.LENGTH_SHORT)
-//                    return@addSnapshotListener
-//                }
-//                querySnapshot?.let {
-//                    for (document in it){
-//                        val number = document.getString("number")
-//                        for( userModel in userContacts){
-//                            if(userModel.number.equals(number)){
-//                                val name = document.getString("name")
-//                                val status = document.getString("status")
-//                                val uId = document.id
-//                                val image = document.getString("image")
-//                                val user  = UserModel()
-//                                user.name = userModel.name
-//                                user.status = status
-//                                user.uID = uId
-//                                user.image = image
-//                                appContacts!!.add(user)
-//                            }
-//                        }
-//                    }
-//                    val adapter = ContactAdapter(requireContext(), appContacts!!)
-//                    binding!!.recyclerViewContact.adapter = adapter
-//                }
-//            }
-//
-//
-//        }
-//    }
 
 
 
@@ -147,5 +112,14 @@ class ContactFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onQueryTextSubmit(p0: String?): Boolean {
+        return false
+    }
+
+    override fun onQueryTextChange(p0: String?): Boolean {
+        if (contactAdapter != null) contactAdapter!!.getFilter().filter(p0)
+        return false
     }
 }
